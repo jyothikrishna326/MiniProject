@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{book.title}}-Book Details</title>
+</head>
+<body>
+    <h1>{{ book.title }}</h1>
+
+    {% if book.cover_image %}
+        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" width="200" height="280">
+    {% else %}
+        <p>No cover image available.</p>
+    {% endif %}
+
+    <p><strong>Author:</strong> {{ book.author.name }}</p>
+    <p><strong>Price:</strong> ₹{{ book.price }}</p>
+    <p><strong>Language:</strong> {{ book.get_language_display }}</p>
+    <p><strong>Stock:</strong> {{ book.stock }}</p>
+
+    {% if book.published_date %}
+        <p><strong>Published Date:</strong> {{ book.published_date }}</p>
+    {% endif %}
+
+    <h3>Description:</h3>
+    <p>{{ book.description }}</p>
+
+    <p><a href="{% url 'book_list' %}">← Back to Book List</a></p>
+</body>
+</html>
