@@ -3,11 +3,6 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
 
 class Author(models.Model):
     name = models.CharField(max_length=100)
@@ -26,6 +21,16 @@ class Customer(models.Model):
         return self.user.username
 
 class Book(models.Model):
+    CATEGORY_CHOICES =[
+        ('al','All Categories'),
+        ('bi','Biography'),
+        ('po','Poetry'),
+        ('nv','Novel'),
+        ('tr','Thriller'),
+        ('dv','Devotional'),
+        ('sr','Story'),
+        ('ai','AutoBiography'),
+    ]
     LANGUAGE_CHOICES = [
         ('ml', 'Malayalam'),
         ('en', 'English'),
@@ -34,8 +39,8 @@ class Book(models.Model):
         ('te', 'Telugu'),
     ]
 
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
+    category = models.CharField(max_length=100 , choices=CATEGORY_CHOICES, default='al')
+    author = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES, default='ml')
     description = models.TextField()

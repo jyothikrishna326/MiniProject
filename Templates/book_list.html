@@ -21,10 +21,10 @@
             <p><strong>Price:</strong> ₹{{ book.price }}</p>
             <p><strong>Language:</strong> {{ book.get_language_display }}</p>
             
-            <p>
+            <!-- <p>
                 <a href="{% url 'add_to_cart' book.id %}">Add to Cart</a> |
                 <a href="{% url 'add_to_wishlist' book.id %}">Add to Wishlist</a>
-            </p>
+            </p> -->
         </div>
     {% empty %}
         <p>No books available.</p>
