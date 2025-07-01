@@ -4,30 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 30px;
+        }
+
+        .search-bar {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search-bar form {
+            display: inline-block;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 8px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-bar button {
+            padding: 8px 15px;
+            background-color: #f56161;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar a {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 8px 15px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .book-card {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-top: 5px solid #f56161;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            text-align: center;
+            max-width: 250px;
+            margin: auto;
+        }
+
+        .book-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .book-card h2 {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0 5px;
+        }
+
+        .book-card p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .book-card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: #f56161;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .book-card a:hover {
+            background: #d94c4c;
+        }
+
+        .no-books {
+            text-align: center;
+            color: #6c757d;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Available Books</h1>
 
-    {% for book in books %}
-        <div style="border:1px solid #f56161; padding:10px; margin-bottom:10px;">
-            {% if book.cover_image %}
-            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" width="120" height="160"><br>
-            {% else %}
-                <p>No Image Available</p>
-            {% endif %}
+    <h1>📚 Available Books</h1>
 
-            <h2>{{ book.title }}</h2>
-            <p><strong>Author:</strong> {{ book.author }}</p>
-            <p><strong>Price:</strong> ₹{{ book.price }}</p>
-            <p><strong>Language:</strong> {{ book.get_language_display }}</p>
-            
-            <p>
-               <a href="{% url 'add_to_cart' book.id %}">Add to Cart</a> 
-                
-            </p>
-        </div>
-    {% empty %}
-        <p>No books available.</p>
-    {% endfor %}
+    <div class="search-bar">
+        <form method="get">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search by book title or author">
+            <button type="submit">Search</button>
+        </form>
+        {% if query %}
+            <a href="{% url 'Book_list' %}">🔁 See All Books</a>
+        {% endif %}
+    </div>
+
+    {% if books %}
+    <div class="grid-container">
+        {% for book in books %}
+            <div class="book-card">
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                {% else %}
+                    <div style="width:100%; height:200px; background:#e9ecef; display:flex; align-items:center; justify-content:center; border-radius:5px; color:#6c757d; font-size:12px;">
+                        No Image
+                    </div>
+                {% endif %}
+                <h2>{{ book.title }}</h2>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>Price:</strong> ₹{{ book.price }}</p>
+                <p><strong>Language:</strong> {{ book.get_language_display }}</p>
+                <a href="{% url 'add_to_cart' book.id %}">🛒 Add to Cart</a>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="no-books">No books available.</p>
+    {% endif %}
+
 </body>
-</html>  
+</html>
