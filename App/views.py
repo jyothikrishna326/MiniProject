@@ -9,8 +9,12 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def Book_list(request):
-    Books = Book.objects.all()
-    return render(request,'book_list.html',{'books':Books})
+    query = request.GET.get("q", "")
+    if query:
+        books = Book.objects.filter(title__icontains=query) | Book.objects.filter(author__icontains=query)
+    else:
+        books = Book.objects.all()
+    return render(request, 'book_list.html', {'books': books, 'query': query})
 
 def book_detail(request,id):
     try:
