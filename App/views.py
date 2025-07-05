@@ -16,12 +16,12 @@ def Book_list(request):
         books = Book.objects.all()
     return render(request, 'book_list.html', {'books': books, 'query': query})
 
-def book_detail(request,id):
+def book_detail(request,book_id):
     try:
-        Book=Book.objects.get(id=id)
+        book=Book.objects.get(id=book_id)
     except Book.DoesNotExist:
-        raise HttpResponse("Book not found")
-    return render(request,'book_detail.html',{'book':Book})
+        return HttpResponse("Book not found")
+    return render(request,'book_detail.html',{'book':book})
 
 
 def customer_register(request):
@@ -60,20 +60,20 @@ def add_to_cart(request, book_id):
 
     return HttpResponse(f"✅ '{book.title}' added to cart successfully.")
 
-# def cart_view(request):
-#     if not request.user.is_authenticated:
-#         return redirect('login')  
+def cart_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')  
 
-#     try:
-#         customer = Customer.objects.get(user=request.user)
-#     except Customer.DoesNotExist:
-#         return redirect('book_list')  
+    try:
+        customer = Customer.objects.get(user=request.user)
+    except Customer.DoesNotExist:
+        return redirect('book_list')  
 
-#     cart_items = CartItem.objects.filter(customer=customer)
-#     total_price = sum(item.book.price * item.quantity for item in cart_items)
+    cart_items = CartItem.objects.filter(customer=customer)
+    total_price = sum(item.book.price * item.quantity for item in cart_items)
 
-#     return render(request, 'cart.html', {
-#         'cart_items': cart_items,
-#         'total_price': total_price
-#     })
+    return render(request, 'cart.html', {
+        'cart_items': cart_items,
+        'total_price': total_price
+    })
 

@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from App import views
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views 
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,8 +28,9 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('register/',views.customer_register,name='register'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
-    path('book_detail/',views.book_detail,name='book_detail'),
+    path('book_detail/<int:book_id>/',views.book_detail,name='book_detail'),
     path('add-to-cart/<int:book_id>/',views.add_to_cart,name='add_to_cart'),
+    path('cart_view/',views.cart_view,name='cart_view'),
 ]
 
 
