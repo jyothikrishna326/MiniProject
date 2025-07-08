@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Book, CartItem, Customer
+from .models import Book, CartItem, Customer,Wishlist,Customer
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from App.forms import UserRegistrationForm
@@ -77,3 +77,37 @@ def cart_view(request):
         'total_price': total_price
     })
 
+
+def add_to_wishlist(request, book_id):
+    customer = request.user.customer
+    book = Book.objects.get(id=book_id)
+
+    if not Wishlist.objects.filter(customer=customer, book=book).exists():
+        Wishlist.objects.create(customer=customer, book=book)
+
+    return redirect('wishlist_view')
+
+def wishlist_view(request):
+    customer = request.user.customer
+    wishlist_items = Wishlist.objects.filter(customer=customer)
+
+    return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
+
+
+
+
+def remove_from_wishlist(request, book_id):
+    book_qs = Book.objects.filter(id=book_id)
+    if not book_qs.exists():
+        return redirect('wishlist_view')
+
+    book = book_qs.first()
+    customer_qs = Customer.objects.filter(user=request.user)
+    if not customer_qs.exists():
+        return redirect('wishlist_view')  
+    customer = customer_qs.first()
+    wishlist_item = Wishlist.objects.filter(customer=customer, book=book).first()
+    if wishlist_item:
+        wishlist_item.delete()
+
+    return redirect('wishlist_view')
