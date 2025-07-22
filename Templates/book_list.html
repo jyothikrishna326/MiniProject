@@ -172,11 +172,7 @@
                         No Image
                     </div>
                 {% endif %}
-                <h2>{{ book.title }}</h2>
-                <p><strong>Author:</strong> {{ book.author }}</p>
-                <p><strong>Price:</strong> ₹{{ book.price }}</p>
-                <p><strong>Language:</strong> {{ book.get_language_display }}</p>
-                <a href="{% url 'add_to_cart' book.id %}">🛒 Add to Cart</a>
+            
                 <a href="{% url 'book_detail' book.id %}" class="details-button">View Details</a>
                 <a href="{% url 'add_to_wishlist' book.id %}" class="text-blue-500 hover:underline"> ❤ Add to Wishlist</a>
             </div>

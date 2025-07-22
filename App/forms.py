@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Customer
+from .models import Review
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -17,3 +18,8 @@ class UserRegistrationForm(forms.ModelForm):
         if password and confirm and password != confirm:
             raise forms.ValidationError("Passwords do not match.")
         return cleaned_data
+    
+
+
+
+        

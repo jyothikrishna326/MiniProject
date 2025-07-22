@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect
-from .models import Book, CartItem, Customer,Wishlist,Customer
+from .models import Book, CartItem, Customer,Wishlist,Customer,Order, OrderItem
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from App.forms import UserRegistrationForm
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
@@ -22,6 +23,7 @@ def book_detail(request,book_id):
     except Book.DoesNotExist:
         return HttpResponse("Book not found")
     return render(request,'book_detail.html',{'book':book})
+
 
 
 def customer_register(request):
@@ -58,11 +60,11 @@ def add_to_cart(request, book_id):
         cart_item.quantity += 1
         cart_item.save()
 
-    return HttpResponse(f"✅ '{book.title}' added to cart successfully.")
+    return redirect('cart_view')
 
 def cart_view(request):
     if not request.user.is_authenticated:
-        return redirect('login')  
+        return redirect('book_list')  
 
     try:
         customer = Customer.objects.get(user=request.user)
@@ -75,7 +77,8 @@ def cart_view(request):
     return render(request, 'cart.html', {
         'cart_items': cart_items,
         'total_price': total_price
-    })
+     })
+    
 
 
 def add_to_wishlist(request, book_id):
@@ -94,8 +97,6 @@ def wishlist_view(request):
     return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
 
 
-
-
 def remove_from_wishlist(request, book_id):
     book_qs = Book.objects.filter(id=book_id)
     if not book_qs.exists():
@@ -111,3 +112,28 @@ def remove_from_wishlist(request, book_id):
         wishlist_item.delete()
 
     return redirect('wishlist_view')
+
+
+@login_required
+def place_order(request):
+    if request.method == 'POST':
+        customer = Customer.objects.get(user=request.user)
+        cart_items = CartItem.objects.filter(customer=customer)
+
+        if not cart_items.exists():
+            return redirect('cart_view')
+
+        order = Order.objects.create(customer=customer)
+        for item in cart_items:
+            OrderItem.objects.create(order=order, book=item.book, quantity=item.quantity)
+
+        cart_items.delete()
+
+        return redirect('order_success',order_id=order.id)
+    return redirect('cart_view')
+
+def order_success(request, order_id):
+    order = Order.objects.get(id=order_id)
+    return render(request, 'order_success.html', {'order': order})
+
+

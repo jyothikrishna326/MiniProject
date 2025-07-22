@@ -57,11 +57,12 @@
             </div>
 
         </div>
+        <form method="POST" action="{% url 'add_to_cart' book.id %}" class="mb-6">
+    {% csrf_token %}
+    <button type="submit" class="bg-orange-100 hover:bg-orange-600 text-white px-4 py-2 rounded">
+        🛒 Add to Cart
+    </button>
+</form>
     </div>
 
 </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>

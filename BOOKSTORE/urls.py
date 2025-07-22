@@ -24,7 +24,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.Book_list,name='home'),
+    # path('',views.login,name='home'),
     path('Book_list/',views.Book_list,name='Book_list'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('register/',views.customer_register,name='register'),
@@ -35,6 +35,11 @@ urlpatterns = [
     path('wishlist_view/',views.wishlist_view,name='wishlist_view'),
     path('add_to_wishlist/<int:book_id>/',views.add_to_wishlist,name='add_to_wishlist'),
     path('remove_from_wishlist/<int:book_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+    
+    path('place_order/',views.place_order,name='place_order'),
+    path('order_success/<int:order_id>/',views.order_success,name='order_success'),
+    
+
 ]
 
 
