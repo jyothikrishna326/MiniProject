@@ -1,14 +1,17 @@
 from django.shortcuts import render,redirect
-from .models import Book, CartItem, Customer,Wishlist,Customer,Order, OrderItem
+from .models import Book, CartItem, Customer,Wishlist,Customer,Order, OrderItem,Review
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from App.forms import UserRegistrationForm
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from .forms import ReviewForm
 
 
 # Create your views here.
 
+def home (request):
+    return render(request,'login.html')
 def Book_list(request):
     query = request.GET.get("q", "")
     if query:
@@ -17,12 +20,77 @@ def Book_list(request):
         books = Book.objects.all()
     return render(request, 'book_list.html', {'books': books, 'query': query})
 
-def book_detail(request,book_id):
+# def book_detail(request,book_id):
+#     try:
+#         book=Book.objects.get(id=book_id)
+#         reviews = book.reviews.all() 
+#     except Book.DoesNotExist:
+#         return HttpResponse("Book not found")
+#     return render(request,'book_detail.html',{'book':book})
+
+    
+# form = None
+# if request.user.is_authenticated and hasattr(request.user, 'customer'):
+#     customer = request.user.customer
+#     existing_review = Review.objects.filter(book=Book, customer=customer).first()
+#     if not existing_review:
+#         if request.method == 'POST':
+#             form = ReviewForm(request.POST)
+#             if form.is_valid():
+#                 new_review = form.save(commit=False)
+#                 new_review.book = Book
+#                 new_review.customer = customer
+#                 new_review.save()
+#             return redirect('book_detail', book_id=Book.id)
+#         else:
+#             form = ReviewForm()
+
+#     context = {
+#         'book': Book,
+#         'reviews': reviews,
+#         'form': form,
+#     }
+
+#     return render(request, 'book_detail.html', context)
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
+from .models import Book, Review
+from .forms import ReviewForm
+
+def book_detail(request, book_id):
     try:
-        book=Book.objects.get(id=book_id)
+        book = Book.objects.get(id=book_id)
+        reviews = book.reviews.all()
     except Book.DoesNotExist:
         return HttpResponse("Book not found")
-    return render(request,'book_detail.html',{'book':book})
+
+    form = None
+    if request.user.is_authenticated and hasattr(request.user, 'customer'):
+        customer = request.user.customer
+        existing_review = Review.objects.filter(book=book, customer=customer).first()
+
+        if not existing_review:
+            if request.method == 'POST':
+                form = ReviewForm(request.POST)
+                if form.is_valid():
+                    new_review = form.save(commit=False)
+                    new_review.book = book
+                    new_review.customer = customer
+                    new_review.save()
+                    return redirect('book_detail', book_id=book.id)
+            else:
+                form = ReviewForm()
+
+    context = {
+        'book': book,
+        'reviews': reviews,
+        'form': form,
+    }
+
+    return render(request, 'book_detail.html', context)
 
 
 
@@ -43,7 +111,7 @@ def customer_register(request):
 
 
 
-@login_required
+
 def add_to_cart(request, book_id):
     try:
         customer = Customer.objects.get(user=request.user)
@@ -114,7 +182,7 @@ def remove_from_wishlist(request, book_id):
     return redirect('wishlist_view')
 
 
-@login_required
+
 def place_order(request):
     if request.method == 'POST':
         customer = Customer.objects.get(user=request.user)
@@ -137,3 +205,31 @@ def order_success(request, order_id):
     return render(request, 'order_success.html', {'order': order})
 
 
+
+
+# def book_detail(request, book_id):
+#     book = HttpResponse(Book, id=book_id)
+#     reviews = book.reviews.all()  
+    
+#     form = None
+#     if request.user.is_authenticated and hasattr(request.user, 'customer'):
+#         customer = request.user.customer
+#         existing_review = Review.objects.filter(book=book, customer=customer).first()
+#         if not existing_review:
+#             if request.method == 'POST':
+#                 form = ReviewForm(request.POST)
+#                 if form.is_valid():
+#                     new_review = form.save(commit=False)
+#                     new_review.book = book
+#                     new_review.customer = customer
+#                     new_review.save()
+#                     return redirect('book_detail', book_id=book.id)
+#             else:
+#                 form = ReviewForm()
+
+#     context = {
+#         'book': book,
+#         'reviews': reviews,
+#         'form': form,
+#     }
+#     return render(request, 'book_detail.html', context)

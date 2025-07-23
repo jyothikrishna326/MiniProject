@@ -182,5 +182,17 @@
         <p class="no-books">No books available.</p>
     {% endif %}
 
+    <div class="fiexd top -4 left-4 z-50">
+        {% if user.is_authenticated %}
+
+        <form method="post" action="{% url 'logout' %}">
+         {% csrf_token %}
+        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded">
+          Logout
+        </button>
+        </form>
+        {% endif %}
+    </div>
+
 </body>
 </html>
