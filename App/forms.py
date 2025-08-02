@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Customer
-from .models import Review
+from .models import Customer, Review
+
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -18,7 +18,13 @@ class UserRegistrationForm(forms.ModelForm):
         if password and confirm and password != confirm:
             raise forms.ValidationError("Passwords do not match.")
         return cleaned_data
-    
+
+
+# ✅ Moved outside (fixes your import error)
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['address', 'phone_number', 'pincode']
 
 
 class ReviewForm(forms.ModelForm):

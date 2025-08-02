@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,5 +9,88 @@
     
     <h2>Welcome, {{ user.username }}</h2>
     <p>Email: {{ user.email }}</p>
+    <p>address:{{ Customer.address}}</p>
+    <p>phone_number:{{Customer.phone_number}}</p>
+    <p>pincode:{{Customer.pincode}}</p>
+</body>
+</html> -->
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-100 to-purple-200 min-h-screen flex items-center justify-center">
+
+    <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+        <h2 class="text-3xl font-bold text-indigo-700 mb-6 text-center">Welcome, {{ user.username }}</h2>
+
+        <div class="space-y-4 text-gray-800 text-sm">
+            <p><span class="font-semibold text-gray-600">Email:</span> {{ user.email }}</p>
+            <p><span class="font-semibold text-gray-600">Address:</span> {{ customer.address }}</p>
+            <p><span class="font-semibold text-gray-600">Phone Number:</span> {{ customer.phone_number }}</p>
+            <p><span class="font-semibold text-gray-600">Pincode:</span> {{ customer.pincode }}</p>
+        </div>
+
+        <div class="mt-6 text-center">
+            <a href="{% url 'Book_list' %}" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition">
+                Go to Book List
+            </a>
+        </div>
+    </div>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e3f2fd, #ffffff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .profile-card {
+            max-width: 450px;
+            border-radius: 20px;
+            animation: fadeIn 0.7s ease-in-out;
+        }
+        .profile-card h2 {
+            color: #0d6efd;
+            font-weight: 700;
+        }
+        .profile-card p {
+            font-size: 1.1rem;
+            color: #333;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+    <div class="card shadow p-4 text-center" style="max-width: 500px; margin: auto; border-radius: 1rem;">
+        <h2 class="text-primary mb-4">Welcome, {{ user.username }}</h2>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Address:</strong> {{ customer.address|default:"Not Provided" }}</p>
+        <p><strong>Phone Number:</strong> {{ customer.phone_number|default:"Not Provided" }}</p>
+        <p><strong>Pincode:</strong> {{ customer.pincode|default:"Not Provided" }}</p>
+        <a href="{% url 'Book_list' %}" class="btn btn-primary mt-3">Go to Book List</a>
+    </div>
+</div>
 </body>
 </html>

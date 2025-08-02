@@ -1,11 +1,11 @@
 from django.shortcuts import render,redirect
-from .models import Book, CartItem, Customer,Wishlist,Customer,Order, OrderItem,Review
+from .models import Book, CartItem, Customer,Wishlist,Order, OrderItem,Review
 from django.contrib.auth.models import User
 from django.contrib.auth import login
-from App.forms import UserRegistrationForm
+from App.forms import UserRegistrationForm,CustomerForm,ReviewForm,Customer
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import ReviewForm
+
 
 
 # Create your views here.
@@ -20,9 +20,46 @@ def Book_list(request):
         books = Book.objects.all()
     return render(request, 'book_list.html', {'books': books, 'query': query})
 
+def customer_register(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+        address = request.POST['address']
+        phone = request.POST['phone']
+        pincode = request.POST['pincode']
+
+        # Create User object
+        user = User.objects.create_user(username=username, password=password, email=email)
+        user.save()
+
+        # Create Customer object linked to User
+        customer = Customer.objects.create(
+            user=user,
+            address=address,
+            phone_number=phone,
+            pincode=pincode
+        )
+
+        # Log in the user after registration
+        login(request, user)
+        return redirect('profile')
+    else:
+        return render(request, 'register.html')
+
+
 
 def profile_view(request):
-    return render(request, 'profile.html')
+    if not request.user.is_authenticated:
+        return redirect('login')
+    try:
+        customer = request.user.customer
+    except Customer.DoesNotExist:
+        customer = None
+    return render(request, 'profile.html', {
+        'user': request.user,
+        'customer': customer,
+    })
 
 
 def book_detail(request, book_id):
@@ -59,23 +96,12 @@ def book_detail(request, book_id):
 
 
 
-def customer_register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            Customer.objects.create(user=user)
-            
-            login(request, user)  
-            return redirect('Book_list')
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'register.html', {'form': form})
 
 
 
+
+
+        
 
 def add_to_cart(request, book_id):
     try:

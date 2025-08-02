@@ -11,14 +11,21 @@ class Author(models.Model):
     def __str__(self):
         return self.name
 
-class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    address = models.TextField(blank=True, null=True)
-    phone = models.CharField(max_length=15, blank=True)
-    pincode = models.CharField(max_length=10,blank=True,null=True)
+# class Customer(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     address = models.TextField(blank=True, null=True)
+#     phone_number = models.CharField(max_length=15, blank=True)
+#     pincode = models.CharField(max_length=10,blank=True,null=True)
 
-    def __str__(self):
-        return self.user.username
+#     def __str__(self):
+#         return self.user.username
+
+
+class Customer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="customer")
+    address = models.CharField(max_length=255, default="Not Provided")
+    phone_number = models.CharField(max_length=20, default="Not Provided")
+    pincode = models.CharField(max_length=10, default="Not Provided")
 
 class Book(models.Model):
     CATEGORY_CHOICES =[
