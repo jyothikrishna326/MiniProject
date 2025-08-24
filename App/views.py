@@ -99,22 +99,16 @@ def book_detail(request, book_id):
 
 
 def add_to_cart(request, book_id):
-    try:
-        customer = Customer.objects.get(user=request.user)
-    except Customer.DoesNotExist:
-        return HttpResponse("❌ Customer not found. Please register.")
+    customer, created = Customer.objects.get_or_create(user=request.user)
 
-    try:
-        book = Book.objects.get(id=book_id)
-    except Book.DoesNotExist:
-        return HttpResponse("📕 Book not found. Please try again.")  
-
+    book = get_object_or_404(Book, id=book_id)
     cart_item, created = CartItem.objects.get_or_create(customer=customer, book=book)
     if not created:
         cart_item.quantity += 1
         cart_item.save()
-
     return redirect('cart_view')
+
+
 
 def cart_view(request):
     if not request.user.is_authenticated:
@@ -139,11 +133,9 @@ def remove_from_cart(request, item_id):
     try:
         customer = Customer.objects.get(user=request.user)
     except Customer.DoesNotExist:
-        return HttpResponse("❌ Customer not found. Please register first.")
+        return HttpResponse("cart_view")
 
-    item = get_object_or_404(CartItem, id=item_id, customer=customer)
-    item.delete()
-    return redirect('cart_view')
+    
 
 
 
