@@ -1,205 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book List</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f8f9fa;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #343a40;
-            margin-bottom: 30px;
-        }
-
-        .search-bar {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .search-bar form {
-            display: inline-block;
-        }
-
-        .search-bar input[type="text"] {
-            padding: 8px;
-            width: 300px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .search-bar button {
-            padding: 8px 15px;
-            background-color: #f56161;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-left: 5px;
-            cursor: pointer;
-        }
-
-        .search-bar a {
-            display: inline-block;
-            margin-left: 10px;
-            padding: 8px 15px;
-            background-color: #6c757d;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .book-card {
-            background: #fff;
-            border: 1px solid #dee2e6;
-            border-top: 5px solid #f56161;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            text-align: center;
-            max-width: 250px;
-            margin: auto;
-        }
-
-        .book-card img {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .book-card h2 {
-            font-size: 18px;
-            color: #333;
-            margin: 10px 0 5px;
-        }
-
-        .book-card p {
-            margin: 5px 0;
-            color: #555;
-            font-size: 14px;
-        }
-
-        .book-card a {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 6px 12px;
-            background: #f56161;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: background 0.3s;
-        }
-
-        .book-card a:hover {
-            background: #d94c4c;
-        }
-
-        .no-books {
-            text-align: center;
-            color: #6c757d;
-            font-size: 16px;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-
-        .book {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-        }
-
-        h2 {
-            margin: 0 0 10px;
-        }
-
-        .details-button {
-            display: inline-block;
-            padding: 8px 12px;
-            background-color: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .details-button:hover {
-            background-color: #218838;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>📚 Available Books</h1>
-
-    <div class="search-bar">
-        <form method="get">
-            <input type="text" name="q" value="{{ query }}" placeholder="Search by book title or author">
-            <button type="submit">Search</button>
-        </form>
-        {% if query %}
-            <a href="{% url 'Book_list' %}">🔁 See All Books</a>
-        {% endif %}
-    </div>
-
-    {% if books %}
-    <div class="grid-container">
-        {% for book in books %}
-            <div class="book-card">
-                {% if book.cover_image %}
-                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
-                {% else %}
-                    <div style="width:100%; height:350px; background:#e9ecef; display:flex; align-items:center; justify-content:center; border-radius:5px; color:#6c757d; font-size:12px;">
-                        No Image
-                    </div>
-                {% endif %}
-            
-                <a href="{% url 'book_detail' book.id %}" class="details-button">View Details</a>
-                <a href="{% url 'add_to_wishlist' book.id %}" class="text-blue-500 hover:underline"> ❤ Add to Wishlist</a>
-            </div>
-        {% endfor %}
-    </div>
-    {% else %}
-        <p class="no-books">No books available.</p>
-    {% endif %}
-
-    <div class="fiexd top -4 left-4 z-50">
-        {% if user.is_authenticated %}
-
-        <form method="post" action="{% url 'logout' %}">
-         {% csrf_token %}
-        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded">
-          Logout
-        </button>
-        </form>
-        {% endif %}
-    </div>
-
-</body>
-</html> -->
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -207,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Book List</title>
 
-  <!-- ✅ Google Fonts -->
+  
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- ✅ Bootstrap CSS -->
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
   <style>
@@ -322,13 +120,14 @@
 </head>
 <body>
 
-  <!-- ✅ Bootstrap Navbar -->
+  
   <nav class="navbar navbar-expand-lg navbar-white bg-white">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">📚 Bookstore</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
         <span class="navbar-toggler-icon"></span>
       </button>
+      
 
       <div class="collapse navbar-collapse" id="navbarContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -355,10 +154,10 @@
     </div>
   </nav>
 
-  <!-- ✅ Page Title -->
+
   <h1>📚 Available Books</h1>
 
-  <!-- ✅ Search Bar -->
+  
   <div class="search-bar">
     <form method="get">
       <input type="text" name="q" value="{{ query }}" placeholder="Search by book title or author">
@@ -369,7 +168,7 @@
     {% endif %}
   </div>
 
-  <!-- ✅ Book Grid -->
+  
   {% if books %}
   <div class="grid-container">
     {% for book in books %}
@@ -390,7 +189,7 @@
   <p class="no-books">No books available.</p>
   {% endif %}
 
-  <!-- ✅ Bootstrap JS -->
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

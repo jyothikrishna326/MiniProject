@@ -56,11 +56,11 @@
                     <strong>{{ item.book.title }}</strong><br>
                     Quantity: {{ item.quantity }}<br>
                     Price per item: ₹{{ item.book.price }}<br>
-                    Subtotal: ₹{{ item.get_total }}
+                    
                 </div>
             {% endfor %}
 
-            <p class="total">Total Amount: ₹{{ order.get_cart_total }}</p>
+            <p class="total">Total Amount: ₹{{ total_price }}</p>
         </div>
 
         <a href="{% url 'Book_list' %}" class="btn">⬅ Back to Shop</a>

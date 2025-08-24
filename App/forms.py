@@ -20,7 +20,6 @@ class UserRegistrationForm(forms.ModelForm):
         return cleaned_data
 
 
-# ✅ Moved outside (fixes your import error)
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer

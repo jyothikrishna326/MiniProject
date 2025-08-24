@@ -14,6 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+
+
+
 from django.contrib import admin
 from django.urls import path
 from App import views
@@ -24,26 +28,21 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('',views.login,name='home'),
-    path('Book_list/',views.Book_list,name='Book_list'),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('',views.Book_list,name='Book_list'),
     path('register/',views.customer_register,name='register'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('book_detail/<int:book_id>/',views.book_detail,name='book_detail'),
-    path('add-to-cart/<int:book_id>/',views.add_to_cart,name='add_to_cart'),
     path('cart_view/',views.cart_view,name='cart_view'),
+    path('add-to-cart/<int:book_id>/',views.add_to_cart,name='add_to_cart'),
+    path('remove_from_cart/<int:item_id>/',views.remove_from_cart,name='remove_from_cart'),
     path('wishlist_view/',views.wishlist_view,name='wishlist_view'),
     path('add_to_wishlist/<int:book_id>/',views.add_to_wishlist,name='add_to_wishlist'),
     path('remove_from_wishlist/<int:book_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
     path('profile/',views.profile_view,name='profile'),
-    path('place_order/',views.place_order,name='place_order'),
+
+    path('place-order/',views.place_order,name='place_order'),
     path('order_success/<int:order_id>/',views.order_success,name='order_success'),
-    
-    
-
 ]
-
-
-
 
 if settings.DEBUG:urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

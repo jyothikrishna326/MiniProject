@@ -1,17 +1,18 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .models import Book, CartItem, Customer,Wishlist,Order, OrderItem,Review
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from App.forms import UserRegistrationForm,CustomerForm,ReviewForm,Customer
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
 
 
 
 # Create your views here.
 
-def home (request):
-    return render(request,'login.html')
+
 def Book_list(request):
     query = request.GET.get("q", "")
     if query:
@@ -20,32 +21,34 @@ def Book_list(request):
         books = Book.objects.all()
     return render(request, 'book_list.html', {'books': books, 'query': query})
 
-def customer_register(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        email = request.POST['email']
-        address = request.POST['address']
-        phone = request.POST['phone']
-        pincode = request.POST['pincode']
 
-        # Create User object
-        user = User.objects.create_user(username=username, password=password, email=email)
+
+def customer_register(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        confirm_password = request.POST.get('confirm_password')
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return redirect('register')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already taken")
+            return redirect('register')
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered")
+            return redirect('register')
+
+        user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
 
-        # Create Customer object linked to User
-        customer = Customer.objects.create(
-            user=user,
-            address=address,
-            phone_number=phone,
-            pincode=pincode
-        )
+        messages.success(request, "Account created successfully! Please login.")
+        return redirect('login')
 
-        # Log in the user after registration
-        login(request, user)
-        return redirect('profile')
-    else:
-        return render(request, 'register.html')
+    return render(request, "register.html")
 
 
 
@@ -95,14 +98,6 @@ def book_detail(request, book_id):
     return render(request, 'book_detail.html', context)
 
 
-
-
-
-
-
-
-        
-
 def add_to_cart(request, book_id):
     try:
         customer = Customer.objects.get(user=request.user)
@@ -138,6 +133,18 @@ def cart_view(request):
         'total_price': total_price
      })
     
+
+
+def remove_from_cart(request, item_id):
+    try:
+        customer = Customer.objects.get(user=request.user)
+    except Customer.DoesNotExist:
+        return HttpResponse("❌ Customer not found. Please register first.")
+
+    item = get_object_or_404(CartItem, id=item_id, customer=customer)
+    item.delete()
+    return redirect('cart_view')
+
 
 
 def add_to_wishlist(request, book_id):
@@ -180,19 +187,31 @@ def place_order(request):
         cart_items = CartItem.objects.filter(customer=customer)
 
         if not cart_items.exists():
-            return redirect('cart_view')
+            return redirect('cart_view') 
 
+        
         order = Order.objects.create(customer=customer)
+
+    
         for item in cart_items:
             OrderItem.objects.create(order=order, book=item.book, quantity=item.quantity)
 
         cart_items.delete()
 
-        return redirect('order_success',order_id=order.id)
-    return redirect('cart_view')
+        return redirect('order_success', order_id=order.id)
+
+    return render(request, 'place_order.html')
+
 
 def order_success(request, order_id):
     order = Order.objects.get(id=order_id)
-    return render(request, 'order_success.html', {'order': order})
 
+    total_price = sum(
+        item.book.price * item.quantity
+        for item in order.orderitem_set.all()
+    )
 
+    return render(request, 'order_success.html', {
+        'order': order,
+        'total_price': total_price
+    })
