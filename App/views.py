@@ -129,24 +129,39 @@ def cart_view(request):
     
 
 
+
 def remove_from_cart(request, item_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
     try:
-        customer = Customer.objects.get(user=request.user)
-    except Customer.DoesNotExist:
-        return HttpResponse("cart_view")
+        customer = request.user.customer
+    except AttributeError:
+        return redirect('login')
+
+    cart_item = get_object_or_404(CartItem, id=item_id, customer=customer)
+    cart_item.delete()
+
+    return redirect('cart_view')
+
+
 
     
-
-
-
 def add_to_wishlist(request, book_id):
-    customer = request.user.customer
-    book = Book.objects.get(id=book_id)
+    if request.user.is_authenticated:
+
+        customer = request.user.customer
+    else:
+        return redirect('login')
+    
+    book = get_object_or_404(Book,id=book_id)
 
     if not Wishlist.objects.filter(customer=customer, book=book).exists():
         Wishlist.objects.create(customer=customer, book=book)
 
     return redirect('wishlist_view')
+
+
 
 def wishlist_view(request):
     customer = request.user.customer

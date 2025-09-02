@@ -21,7 +21,7 @@
                     <th>Book</th>
                     <th>Quantity</th>
                     <th>Price</th>
-                    <th>Total</th>
+                    
                     <th>Action</th>
                 </tr>
             </thead>
@@ -34,14 +34,16 @@
                         </td>
                         <td>{{ item.quantity }}</td>
                         <td>₹{{ item.book.price }}</td>
-                        <td>₹{{ item.total_price }}</td>
+                        
                         <td>
+                            
                             <a href="{% url 'remove_from_cart' item.id %}" class="btn  btn-danger">
-                                Remove
+                                 Remove 
                             </a>
+                            
                         </td>
                     </tr>
-                {% endfor %}
+                {% endfor %}        
             </tbody>
         </table>
 
